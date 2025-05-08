@@ -45,6 +45,7 @@ packages/
 *.sqlite
 *.sqlite3
 *.db
+!usuarios.db
 
 # Others
 *.bak
