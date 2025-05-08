@@ -1,7 +1,10 @@
-﻿namespace CafeteriaApi.Model
+﻿using System.Text.Json.Serialization;
+
+namespace CafeteriaApi.Model
 {
     public class Usuario
     {
+        [JsonIgnore]
         public int Id { get; set; }
         public string? Nome { get; set; }
         public string? Email { get; set; }
