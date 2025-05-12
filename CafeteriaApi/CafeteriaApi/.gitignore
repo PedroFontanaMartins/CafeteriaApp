@@ -1,0 +1,55 @@
+# Build
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# VSCode
+.vscode/
+.vs
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# dotnet
+*.db
+*.db-shm
+*.db-wal
+*.pdb
+*.cache
+*.nupkg
+*.snupkg
+
+# EF Core
+Migrations/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+!usuarios.db
+
+# Others
+*.bak
+*.tmp
+
+CafeteriaApi/bin/
+CafeteriaApi/obj/
