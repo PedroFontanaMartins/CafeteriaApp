@@ -99,20 +99,45 @@ namespace CafeteriaApi.Controllers
         {
             try
             {
-                var pedidos = _context.Pedido.Where(p => p.IdRestaurante == restauranteId).ToList();
+                var pedidos = await _context.Pedido
+                    .Where(p => p.IdRestaurante == restauranteId)
+                    .ToListAsync();
 
-                if (pedidos == null)
+                if (!pedidos.Any())
                 {
-                    return NotFound("Pedido não encontrado.");
+                    return NotFound("Nenhum pedido encontrado para este restaurante.");
                 }
 
-                return Ok(new { pedidos });
+                var resultado = new List<PedidoListViewModel>();
+
+                foreach (var pedido in pedidos)
+                {
+                    // Busca os produtos associados ao pedido
+                    var produtosDoPedido = await _context.PedidoProduto
+                        .Where(pp => pp.IdPedido == pedido.Id)
+                        .Select(pp => pp.IdProduto)
+                        .ToListAsync();
+
+                    var nomesDosProdutos = await _context.Produto
+                        .Where(prod => produtosDoPedido.Contains(prod.Id))
+                        .Select(prod => prod.Nome)
+                        .ToListAsync();
+
+                    resultado.Add(new PedidoListViewModel
+                    {
+                        ValorTotal = pedido.ValorTotal,
+                        Status = pedido.Status,
+                        DataPedido = pedido.DataPedido,
+                        Produtos = nomesDosProdutos
+                    });
+                }
+
+                return Ok(resultado);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao despachar pedido: {ex.Message}");
+                return StatusCode(500, $"Erro ao listar pedidos: {ex.Message}");
             }
         }
-
     }
 }
