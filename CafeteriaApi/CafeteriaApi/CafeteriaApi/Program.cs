@@ -18,16 +18,31 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Habilita logs detalhados do EF Core para ajudar no debug
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=banco.db"));
+{
+    options.UseSqlite("Data Source=banco.db");
+    options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine);
+});
 
 var app = builder.Build();
 
-// Aqui: cria o banco e aplica as migrations automaticamente
+// Cria o banco e aplica migrations automaticamente
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); // Aplica migrations, cria banco e tabelas se necessário
+
+    try
+    {
+        db.Database.Migrate();  // Tenta aplicar as migrations
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Erro ao aplicar migrations: " + ex.Message);
+        Console.WriteLine("Tentando criar banco sem migrations...");
+        db.Database.EnsureCreated(); // Tenta criar o banco direto, sem migrations (teste)
+    }
 }
 
 app.UseSwagger();
