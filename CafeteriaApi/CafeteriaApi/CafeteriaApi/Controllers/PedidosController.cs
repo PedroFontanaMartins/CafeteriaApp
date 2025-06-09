@@ -94,5 +94,25 @@ namespace CafeteriaApi.Controllers
             }
         }
 
+        [HttpGet("{restauranteId}/listaPedidosRestaurante")]
+        public async Task<IActionResult> ListPedidosRestaurante(int restauranteId)
+        {
+            try
+            {
+                var pedidos = _context.Pedido.Where(p => p.IdRestaurante == restauranteId).ToList();
+
+                if (pedidos == null)
+                {
+                    return NotFound("Pedido não encontrado.");
+                }
+
+                return Ok(new { pedidos });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao despachar pedido: {ex.Message}");
+            }
+        }
+
     }
 }
