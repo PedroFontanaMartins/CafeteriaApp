@@ -10,6 +10,7 @@ namespace CafeteriaApi.Model
 
         public string Status { get; set; }
 
+        [ForeignKey("IdRestaurante")]
         [JsonIgnore]
         public Restaurante Restaurante { get; set; }
         public int IdRestaurante { get; set; }
