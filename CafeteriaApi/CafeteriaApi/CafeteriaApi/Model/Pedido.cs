@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CafeteriaApi.Model
 {
@@ -14,5 +15,10 @@ namespace CafeteriaApi.Model
         [JsonIgnore]
         public Restaurante Restaurante { get; set; }
         public int IdRestaurante { get; set; }
+
+        [ForeignKey("IdUsuario")]
+        [JsonIgnore]
+        public Usuario Usuario { get; set; }
+        public int IdUsuario { get; set; }
     }
 }
