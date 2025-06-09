@@ -8,6 +8,8 @@ namespace CafeteriaApi.ViewModel
         public int IdRestaurante { get; set; }
 
         public List<ProdutoPedidoViewModel> Produtos { get; set; }
+
+        public int IdUsuario { get; set; }
     }
 
     public class ProdutoPedidoViewModel

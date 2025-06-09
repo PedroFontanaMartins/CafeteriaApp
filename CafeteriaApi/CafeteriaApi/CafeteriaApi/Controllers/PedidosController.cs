@@ -25,7 +25,8 @@ namespace CafeteriaApi.Controllers
                 Pedido pedido = new Pedido()
                 {
                     IdRestaurante = pedidoProd.IdRestaurante,
-                    Status = "Em andamento"
+                    Status = "Em andamento",
+                    IdUsuario = pedidoProd.IdUsuario,
                 };
 
                 // Adiciona o pedido e salva para gerar o ID
