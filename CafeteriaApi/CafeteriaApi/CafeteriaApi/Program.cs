@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=usuarios.db"));
+    options.UseSqlite("Data Source=banco.db"));
 
 var app = builder.Build();
 
