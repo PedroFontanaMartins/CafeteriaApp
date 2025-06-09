@@ -23,6 +23,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+// Aqui: cria o banco e aplica as migrations automaticamente
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); // Aplica migrations, cria banco e tabelas se necessário
+}
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
