@@ -7,7 +7,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS liberado para tudo (apenas para testes!)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -18,26 +17,30 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=/app/banco.db"));
+// --- AJUSTE AQUI ---
+// 1. Remova ou comente a linha do SQLite
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseSqlite("Data Source=/app/banco.db"));
 
+// 2. Adicione a configuração do PostgreSQL para ler a connection string do ambiente
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+// --- FIM DO AJUSTE ---
 
 var app = builder.Build();
 
-// Cria o banco e aplica migrations automaticamente
+// O código de migrations não precisa de alteração
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
     try
     {
-        db.Database.Migrate();  // Tenta aplicar as migrations
+        db.Database.Migrate();
     }
     catch (Exception ex)
     {
         Console.WriteLine("Erro ao aplicar migrations: " + ex.Message);
-        Console.WriteLine("Tentando criar banco sem migrations...");
-        db.Database.EnsureCreated(); // Tenta criar o banco direto, sem migrations (teste)
     }
 }
 
@@ -49,11 +52,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
-
-app.UseCors("AllowAll"); // <--- aqui
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
