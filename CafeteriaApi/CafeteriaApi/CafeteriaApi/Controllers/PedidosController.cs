@@ -126,6 +126,7 @@ namespace CafeteriaApi.Controllers
 
                     resultado.Add(new PedidoListViewModel
                     {
+                        Id = pedido.Id,
                         ValorTotal = pedido.ValorTotal,
                         Status = pedido.Status,
                         DataPedido = pedido.DataPedido,
