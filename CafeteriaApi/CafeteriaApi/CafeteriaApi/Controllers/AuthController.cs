@@ -18,12 +18,19 @@ namespace CafeteriaApi.Controllers
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Cadastrar([FromBody] Usuario usuario)
         {
-            if (await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email))
-                return BadRequest("E-mail já cadastrado.");
+            try
+            {
+                if (await _context.Usuarios.AnyAsync(u => u.Email == usuario.Email))
+                    return BadRequest("E-mail já cadastrado.");
 
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
-            return Ok("Usuário cadastrado com sucesso.");
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
+                return Ok("Usuário cadastrado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao cadastrar usuário: {ex.Message}");
+            }
         }
 
         [HttpPost("login")]
