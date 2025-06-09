@@ -42,7 +42,11 @@ namespace CafeteriaApi.Controllers
             if (user == null)
                 return Unauthorized("Credenciais inválidas.");
 
-            return Ok("Login bem-sucedido.");
+            return Ok(new
+            {
+                Id = user.Id,
+                Mensagem = "Login bem-sucedido."
+            });
         }
     }
 }
