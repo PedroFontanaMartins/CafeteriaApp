@@ -27,7 +27,7 @@ namespace CafeteriaApi.Controllers
                     IdRestaurante = pedidoProd.IdRestaurante,
                     Status = "Em andamento",
                     IdUsuario = pedidoProd.IdUsuario,
-                    DataPedido = DateTime.Now,
+                    DataPedido = DateTime.UtcNow,
                 };
 
                 // Adiciona o pedido e salva para gerar o ID
@@ -138,6 +138,29 @@ namespace CafeteriaApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Erro ao listar pedidos: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{pedidoId}/confirmar")]
+        public async Task<IActionResult> Confirmar(int pedidoId)
+        {
+            try
+            {
+                var pedido = await _context.Pedido.FirstOrDefaultAsync(p => p.Id == pedidoId);
+
+                if (pedido == null)
+                {
+                    return NotFound("Pedido não encontrado.");
+                }
+
+                pedido.Status = "Entregue";
+                await _context.SaveChangesAsync();
+
+                return Ok(new { pedido.Id, pedido.Status, Mensagem = "Pedido entregue." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro : {ex.Message}");
             }
         }
     }
