@@ -18,13 +18,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Habilita logs detalhados do EF Core para ajudar no debug
 builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlite("Data Source=banco.db");
-    options.EnableSensitiveDataLogging();
-    options.LogTo(Console.WriteLine);
-});
+    options.UseSqlite("Data Source=/app/banco.db"));
+
 
 var app = builder.Build();
 
