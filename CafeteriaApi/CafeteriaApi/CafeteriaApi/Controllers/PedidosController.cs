@@ -164,5 +164,52 @@ namespace CafeteriaApi.Controllers
                 return StatusCode(500, $"Erro : {ex.Message}");
             }
         }
+
+        [HttpGet("usuario/{userId}/listaPedidosUsuario")]
+        public async Task<IActionResult> ListPedidosUsuario(int userId)
+        {
+            try
+            {
+                var pedidos = await _context.Pedido
+                    .Where(p => p.IdUsuario == userId)
+                    .ToListAsync();
+
+                if (!pedidos.Any())
+                {
+                    return NotFound("Nenhum pedido encontrado para este usuário.");
+                }
+
+                var resultado = new List<PedidoListViewModel>();
+
+                foreach (var pedido in pedidos)
+                {
+                    // Busca os produtos associados ao pedido
+                    var produtosDoPedido = await _context.PedidoProduto
+                        .Where(pp => pp.IdPedido == pedido.Id)
+                        .Select(pp => pp.IdProduto)
+                        .ToListAsync();
+
+                    var nomesDosProdutos = await _context.Produto
+                        .Where(prod => produtosDoPedido.Contains(prod.Id))
+                        .Select(prod => prod.Nome)
+                        .ToListAsync();
+
+                    resultado.Add(new PedidoListViewModel
+                    {
+                        Id = pedido.Id,
+                        ValorTotal = pedido.ValorTotal,
+                        Status = pedido.Status,
+                        DataPedido = pedido.DataPedido,
+                        Produtos = nomesDosProdutos
+                    });
+                }
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao listar pedidos do usuário: {ex.Message}");
+            }
+        }
     }
 }
