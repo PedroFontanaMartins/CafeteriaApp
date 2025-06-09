@@ -4,7 +4,6 @@ namespace CafeteriaApi.Model
 {
     public class Pedido
     {
-        [JsonIgnore]
         public int Id { get; set; }
 
         public decimal ValorTotal { get; set; }

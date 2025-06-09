@@ -4,7 +4,6 @@ namespace CafeteriaApi.Model
 {
     public class UsuarioRestauranteAdm
     {
-        [JsonIgnore]
         public int Id { get; set; }
 
         [JsonIgnore]
