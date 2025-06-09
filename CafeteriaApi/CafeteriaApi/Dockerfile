@@ -10,5 +10,4 @@ RUN dotnet publish "CafeteriaApi/CafeteriaApi.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY CafeteriaApi/banco.db ./banco.db
 ENTRYPOINT ["dotnet", "CafeteriaApi.dll"]
